@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}
+    Todo List
+{% endblock %}
+
+{% block body %}
+    <a class="text-decoration-none display-1 d-block text-center" href="{% url 'task_view' %}"
+       id="todo-list">TODO-LIST</a>
+    {# search bar #}
+    <form action="{% url 'search_tasks' %}" method="get">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <input type="search" class="form-control" aria-label="Search tasks" name="search">
+            <button class="btn btn-primary" type="submit" id="search-button"><i class="fas fa-search"></i>Search
+            </button>
+        </div>
+    </form>
+    {% comment %}<div class="row">
+            <div class="col-10">
+                <input type="search" placeholder="Search tasks" name="search" class="form-control">
+            </div>
+            <div class="col-2">
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+            </div>
+        </div>{% endcomment %}
+
+    {# Loop responsible for displaying all tasks in database #}
+    {% for task in tasks %}
+        <div class="rounded shadow mb-4 p-3">
+            <div class="row">
+                <div class="col-md-8">
+                    <p class="fw-bold h4 align-content-start">{{ task.task }}</p>
+                    <p class="align-content-start"><small>Created at: {{ task.time_task_created }}</small></p>
+                    {% if task.time_task_updated|date:"U" > task.time_task_created|date:"U" %}
+                        <p class="align-content-start"><small>Updated at: {{ task.time_task_updated }}</small></p>
+                    {% endif %}
+                </div>
+                <div class="col-md-4 text-md-end text-start">
+                    <a href="{% url 'update_list' task.id %}" class="btn btn-outline-primary "><i
+                            class="fa-solid fa-pen-to-square"></i></a>
+                    <a href="{% url 'delete_item' task.id %}" class="btn btn-outline-danger text-end"><i
+                            class="fa-solid fa-x"></i></a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <h3>There are no tasks to complete, Lucky you. :|</h3>
+        <a href="{% url 'add_new_task' %}">
+            <button type="button" class="btn btn-success"><i class="fa-solid fa-plus"></i>Add a new task</button>
+        </a>
+    {% endfor %}
+    <br>
+    <a href="{% url 'add_new_task' %}">
+        <button type="button" class="btn btn-success"><i class="fa-solid fa-plus"></i>Add a new task</button>
+    </a>
+
+
+    {# loop responisble for displaying the search results of user #}
+    {% comment %}    {% if search_results %}
+        {% for found_result in search_results %}
+            <div>
+                <p>{{ found_result.task }}</p>
+                <p>Created at: {{ found_result.time_task_created }}</p>
+                <a href="{% url 'update_list' found_result.id %}">
+                    <button class="btn btn-outline-primary"><i class="fa-solid fa-pen-to-square"></i></button>
+                </a>
+                <form action="{% url 'delete_item' found_result.id %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger"><i class="fa-solid fa-x"></i></button>
+                </form>
+            </div>
+            </form>
+        {% empty %}
+            {#  display error message if nothing search doesn't match database #}
+            <p>There are no tasks to complete, Lucky you. :|</p>
+            <a href="{% url 'add_new_task' %}">
+                <button type="button" class="btn btn-success">Add a new task</button>
+            </a>
+        {% endfor %}
+    {% endif %}{% endcomment %}
+{% endblock %}

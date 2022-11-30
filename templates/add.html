@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Add Task
+{% endblock %}
+
+{% block body %}
+
+    <form method="post" action="">
+        {% csrf_token %}
+        <div class="card mt-5 pb-3">
+            <div class="card-header">
+                Update Task
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Add a new task</h5>
+                <p class="card-text d-inline">Task name:</p>
+                {{ form.task }}
+                <button type="submit" class="btn btn-primary mt-4 mb-2"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+            </div>
+        </div>
+    </form>
+    <a href="{% url 'task_view' %}"><button class="btn btn-warning mt-3"><i class="fa-solid fa-eye"></i>View Tasks</button></a>
+
+
+{% endblock %}
